@@ -18,7 +18,7 @@ tags: [TryHackMe, Linux, Web, File Upload Bypass, RCE, Command Injection, Privil
 
 I started as always with port enumeration. My go-to command for *nmap* is:
 ```bash
-nmap -sC -sV -O -oN scan.txt 10.66.135.59
+nmap -sC -sV -O -oN scan.txt TARGET_IP
 ```
 *-sC* performs default Nmap scanning scripts, *-sV* so I can get the port services versions and *-O* operating system detection. Finally, *-oN <FILENAME.txt>* outputs my scan result on a file, very convenient for later use. And that's what I have:
 ```bash
@@ -29,7 +29,7 @@ PORT   STATE SERVICE VERSION
 [...]
 ```
 
-Here, I have port 22 open, which may prove useful later. When you connect to an SSH service, it's like you're sitting right in front of the target machine's terminal. But to do that, you need some form of authentication: a password or an RSA key. I have neither, so I move on — but port 80 is also open, which means I can visit http://<TARGET_IP>
+Here, I have port 22 open, which may prove useful later. When you connect to an SSH service, it's like you're sitting right in front of the target machine's terminal. But in order to do that, you need some form of authentication: a password or an RSA key. I have neither, so I move on — but port 80 is also open, which means I can visit http://<TARGET_IP>
 
 ![Default Apache 2 page](apache2.png)
 
@@ -38,9 +38,9 @@ A default Apache2 page.
 Let me enumerate directories with *gobuster*; maybe there's something interesting under the surface. Directory enumeration means finding directories, files or endpoints that are not linked on a web server.
 
 ```bash
-gobuster dir -u http://10.66.135.59 -w /usr/share/wordlists/seclists/Discovery/Web-Content/raft-large-directories-lowercase.txt
+gobuster dir -u http://TARGET_IP -w /usr/share/wordlists/seclists/Discovery/Web-Content/raft-large-directories-lowercase.txt
 [...]
-app                  (Status: 301) [Size: 310] [--> http://10.66.135.59/app/]
+app                  (Status: 301) [Size: 310] [--> http://TARGET_IP/app/]
 server-status        (Status: 403) [Size: 277]
 [...]
 ```
